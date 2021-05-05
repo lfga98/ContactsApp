@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <div class="" id="listaContactos">
+
+    </div>
+  </body>
+  <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript">
+    $( document ).ready(function() {
+      $.get( "/contacts", function( data ) {
+          let contactInfo ="";
+          contactInfo="<table><thead><tr><td>Name</td><td>Last Name</td><td>Company</td>"+
+          "<td>Phone number</td><td>Email</td></tr></thead><tbody>";
+          $.each(data,(i,item) => {
+            contactInfo+="<tr>";
+            contactInfo+="<td>"+item.name+"</td>";
+            contactInfo+="<td>"+item.lastname+"</td>";
+            contactInfo+="<td>"+item.company+"</td>";
+            contactInfo+="<td>"+item.phone_number+"</td>";
+            contactInfo+="<td>"+item.email+"</td>";
+            contactInfo+="</tr>"
+
+          });
+          contactInfo+="</tbody></table>";
+
+          $("#listaContactos").html(contactInfo);
+      });
+
+
+
+    });
+  </script>
+
+</html>

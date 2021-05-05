@@ -1,24 +1,36 @@
 package com.lfgaacademy.contactsapp.entities;
-
-
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 
 
 @Entity
 @Table(name = "contacts")
 public class Contact {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String lastname;
+    @Column(name = "last_name",nullable = false)
+    private String lastName;
 
-    public Contact() {
-    }
+
+    @Column(name = "phone_number",length = 10, unique = true)
+    private String phoneNumber;
+
+
+    @Column(unique = true)
+    @Email
+    private String email;
+
+
+
+    private String company;
+
+
 
     public Long getId() {
         return id;
@@ -36,12 +48,12 @@ public class Contact {
         this.name = name;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastname) {
+        this.lastName = lastname;
     }
 
     public String getCompany() {
@@ -52,12 +64,12 @@ public class Contact {
         this.company = company;
     }
 
-    public String getPhone_number() {
-        return phone_number;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
+    public void setPhoneNumber(String phone_number) {
+        this.phoneNumber = phone_number;
     }
 
     public String getEmail() {
@@ -67,12 +79,4 @@ public class Contact {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    private String company;
-
-    @Column(length = 10, unique = true)
-    private String phone_number;
-
-    @Column(unique = true)
-    private String email;
 }
