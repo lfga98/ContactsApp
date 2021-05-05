@@ -9,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/contacts")
-
 public class ContactController {
 
     private final ContactService contactService;
