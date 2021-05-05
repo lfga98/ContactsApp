@@ -4,7 +4,7 @@ package com.lfgaacademy.contactsapp.services;
 import com.lfgaacademy.contactsapp.entities.Contact;
 import com.lfgaacademy.contactsapp.exceptions.DeletedNotFoundException;
 import com.lfgaacademy.contactsapp.exceptions.FormatInvalidException;
-import com.lfgaacademy.contactsapp.exceptions.MissmatchIdException;
+import com.lfgaacademy.contactsapp.exceptions.MismatchIdException;
 import com.lfgaacademy.contactsapp.exceptions.UniqueConstraintException;
 import com.lfgaacademy.contactsapp.repositories.ContactRepository;
 import org.springframework.stereotype.Service;
@@ -46,8 +46,9 @@ public class ContactService {
     }
 
     public Contact editContact(Long idContact, Contact newContact) {
-        if (idContact != newContact.getId())
-            throw new MissmatchIdException("ContactId: " + idContact + " doesn't match object's ID: " + newContact.getId());
+        if (idContact.equals(newContact.getId()))
+            throw new MismatchIdException("ContactId: " + idContact + " doesn't match object's ID: " + newContact.getId());
+
         fieldsValidator(newContact);
 
         return contactRepository.save(newContact);

@@ -1,7 +1,6 @@
 package com.lfgaacademy.contactsapp.exceptions;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,23 +10,27 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ControllerExceptionHandler {
 
     @ExceptionHandler(DeletedNotFoundException.class)
-    public ResponseEntity<String> deletedContactNotFound(DeletedNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    public ErrorMessage deletedContactNotFound(DeletedNotFoundException ex) {
+        ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), HttpStatus.NO_CONTENT.value());
+        return errorMessage;
     }
 
-    @ExceptionHandler(MissmatchIdException.class)
-    public ResponseEntity<String> missmatchIdContact(MissmatchIdException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(MismatchIdException.class)
+    public ErrorMessage mismatchIdContact(MismatchIdException ex) {
+        ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return errorMessage;
     }
 
     @ExceptionHandler(UniqueConstraintException.class)
-    public ResponseEntity<String> uniqueContraints(UniqueConstraintException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    public ErrorMessage uniqueConstraints(UniqueConstraintException ex) {
+        ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return errorMessage;
     }
 
     @ExceptionHandler(FormatInvalidException.class)
-    public ResponseEntity<String> formatInvalidInputs(FormatInvalidException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    public ErrorMessage formatInvalidInputs(FormatInvalidException ex) {
+        ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return errorMessage;
     }
 
 }

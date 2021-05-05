@@ -1,19 +1,15 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
     <title>Contacts App</title>
 </head>
 
 
 <body>
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="/">Contacts App</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,83 +18,40 @@
 </nav>
 
 <div class="container mt-4">
+    <div class="alert alert-success" role="alert" id="notifications">
+    </div>
     <div class="card">
         <h5 class="card-header">All Contacts</h5>
         <div class="card-body">
             <div class="" id="listaContactos">
-
             </div>
-
         </div>
     </div>
+
+    <div id="miModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="titleModal" class="modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 </div>
-
-
-
-
-
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="/js/jquery-3.6.0.min.js" ></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
+<script type="text/javascript" src="/js/contacts.js" ></script>
 </body>
-
-<script type="text/javascript">
-    $( document ).ready(function() {
-        let numItems=0;
-        $.get( "/contacts", function( data ) {
-            let contactInfo ="";
-            contactInfo="<table class='table table-striped paginated' id='contactsTable'><thead class='table-header'><tr><td>Name</td><td>Last Name</td><td>Company</td>"+
-                "<td>Phone number</td><td>Email</td><td></td><td><a type=\"button\" class=\"btn btn-success\"><i class=\"fa fa-plus\"></i></a></td></tr></thead><tbody>";
-            $.each(data,(i,item) => {
-                numItems++;
-                contactInfo+="<tr>";
-                contactInfo+="<td>"+item.name+"</td>";
-                contactInfo+="<td>"+item.lastName+"</td>";
-                contactInfo+="<td>"+item.company+"</td>";
-                contactInfo+="<td>"+item.phoneNumber+"</td>";
-                contactInfo+="<td>"+item.email+"</td>";
-                contactInfo+="<td><a type=\"button\" class=\"btn btn-warning\"><i class=\"fa fa-pencil\"></i></a></td>";
-                contactInfo+="<td><a type=\"button\" class=\"btn btn-danger\"><i class=\"fa fa-times\"></i></a></td>";
-                contactInfo+="</tr>"
-
-            });
-            contactInfo+="</tbody></table>";
-            $("#listaContactos").html(contactInfo);
-
-
-            $('table.paginated').each(function () {
-                var currentPage = 0;
-                var numPerPage = 10; // number of items
-                var $table = $(this);
-
-                $table.bind('repaginate', function () {
-                    $table.find('tbody tr').hide().slice(currentPage * numPerPage, (currentPage + 1) * numPerPage).show();
-                });
-                $table.trigger('repaginate');
-                var numRows = $table.find('tbody tr').length;
-                var numPages = Math.ceil(numRows / numPerPage);
-                var $pager = $('<div class="pager"></div>');
-                for (var page = 0; page < numPages; page++) {
-                    $('<span class="btn btn-light"></span>').text(page + 1).bind('click', {
-                        newPage: page
-                    }, function (event) {
-                        currentPage = event.data['newPage'];
-                        $table.trigger('repaginate');
-                        $(this).addClass('active').siblings().removeClass('active');
-                    }).appendTo($pager).addClass('clickable');
-                }
-                if (numRows > numPerPage) {
-                    $pager.insertAfter($table).find('span.page-number:first').addClass('active');
-                }
-            });
-        });
-
-
-    });
-</script>
 
 
 
