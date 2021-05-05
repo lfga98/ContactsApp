@@ -12,6 +12,7 @@ public interface ContactRepository extends JpaRepository<Contact,Long> {
     Contact findContactById(Long contactID);
     void deleteById(Long contactId);
     Contact findContactByEmail(String email);
+    Contact findContactByPhoneNumber(String email);
 
 
 }
