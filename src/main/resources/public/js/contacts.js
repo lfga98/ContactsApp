@@ -2,7 +2,8 @@ $( document ).ready(function() {
     $('#notifications').hide()
     $('#notifications').removeClass("alert alert-warning alert")
     $('#notifications').text("");
-    
+
+
 
 
     $.get( "/contacts", function( data ) {
@@ -62,49 +63,112 @@ $( document ).ready(function() {
             }
         });
 
-
-
-        $(".btn-danger").click(function() {
+        function deleteFunctionality(context) {
             if (!confirm("Are you sure you want to delete this contact?")){
                 return false;
             }
-            row = $(this).closest("tr");
+            row = $(context).closest("tr");
             id = row.find("td:nth-child(1)");
-            console.log(id)
             fetch("/contacts/"+id.text(), {
                 method: 'DELETE'
             }).then(response => response.json())
-              .then(function(data) {
-                if (data.hasOwnProperty("statusCode")){
-                    if (data.statusCode==204){
-                        $("#notifications").show()
-                        $("#notifications").className="alert alert-warning";
-                        $("#notifications").text("");
-                        $("#notifications").text(data.message);
+                .then(function(data) {
+                    if (data.hasOwnProperty("statusCode")){
+                        if (data.statusCode==204){
+                            $("#notifications").show()
+                            $("#notifications").className="alert alert-warning";
+                            $("#notifications").text("");
+                            $("#notifications").text(data.message);
+                        }
                     }
-                }
-                if (data.hasOwnProperty("id")){
-                    $("#notifications").show()
-                    $("#notifications").addClass("alert");
-                    $("#notifications").addClass("alert-success");
-                    $("#notifications").text("");
-                    $("#notifications").text("Contact Deleted!");
-                    row.remove();
-                }
-            }).catch(function(error) {
+                    if (data.hasOwnProperty("id")){
+                        $("#notifications").show()
+                        $("#notifications").addClass("alert");
+                        $("#notifications").addClass("alert-success");
+                        $("#notifications").text("");
+                        $("#notifications").text("Contact Deleted!");
+                        row.remove();
+                    }
+                }).catch(function(error) {
                 $("#notifications").show()
                 $("#notifications").addClass("alert");
                 $("#notifications").addClass("alert-danger");
                 $("#notifications").text("");
                 $("#notifications").text("Internal error " + error);
             });
+        }
+
+
+
+        $(".btn-danger").click(function () {
+            deleteFunctionality(this)
         });
-        
-        
+
         $("#new_contact").click(function () {
+            $("#titleModal").text("New Contact");
             $("#miModal").modal("show");
-            $("#titleModal").text("New Contact")
+            $("#miModal #btnUpdateModal").hide()
+            $("#miModal #btnSaveModal").show()
         })
+
+        $("#miModal #btnSaveModal").click(function (){
+            id=$("#miModal #contactId").val();
+            if (id==-1){
+                let contact={
+                    name:$("#miModal #nameInput").val(),
+                    lastName:$("#miModal #lastNameInput").val(),
+                    email:$("#miModal #emailInput").val(),
+                    phoneNumber:$("#miModal #phoneNumberInput").val(),
+                    company:$("#miModal #companyInput").val()
+                }
+                let contactJson=JSON.stringify(contact);
+                console.log(contactJson)
+                $.ajax({
+                    url: '/contacts/',
+                    dataType: 'json',
+                    type: 'post',
+                    contentType: 'application/json',
+                    data: contactJson,
+                    success: function( data, textStatus, jQxhr ){
+                        if (data.hasOwnProperty("statusCode")){
+                            if (data.statusCode==400){
+                                $("#miModal #notificationsModal").addClass("alert");
+                                $("#miModal #notificationsModal").addClass("alert-danger");
+                                $("#miModal #notificationsModal").text("");
+                                $("#miModal #notificationsModal").text(data.message);
+                            }
+                        }
+                        else if (data.hasOwnProperty("id")){
+                            $("#miModal").modal("hide");
+                            console.log(data.id);
+                            $('#contactsTable').append('<tr><td>'+data.id+'</td><td>'+data.name+'</td><td>'+data.lastName+'</td>' +
+                                '<td>'+data.company+'</td><td>'+data.phoneNumber+'</td><td>'+data.email+'</td>' +
+                                '<td><a type=\"button\" class=\"btn btn-warning\"><i class=\"fa fa-pencil\"></i></a></td>' +
+                                '<td><a type=\'button\' class=\'btn btn-danger\'  ><i class=\"fa fa-times\"></i></a></td>' +
+                                '</tr>');
+                            $("#notifications").show()
+                            $("#notifications").addClass("alert");
+                            $("#notifications").addClass("alert-success");
+                            $("#notifications").text("");
+                            $("#notifications").text("Contact Created!");
+                            $(".btn-danger").click(function () {
+                                deleteFunctionality($('#listaContactos tr:last'));
+                            });
+                        }
+                    },
+                    error: function( jqXhr, textStatus, errorThrown ){
+                        $("#miModal").modal("hide");
+                        $("#notifications").addClass("alert");
+                        $("#notifications").addClass("alert-danger");
+                        $("#notifications").text("");
+                        $("#notifications").text("Internal error");
+                    }
+                });
+            }
+        });
+
+
+
 
 
 
@@ -113,6 +177,5 @@ $( document ).ready(function() {
 
 
     });
-
 
 });

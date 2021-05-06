@@ -9,6 +9,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ResponseBody
 public class ControllerExceptionHandler {
 
+    @ExceptionHandler(MissingValueException.class)
+    public ErrorMessage missingValueOrEmpty(MissingValueException ex) {
+        ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return errorMessage;
+    }
+
+
+
     @ExceptionHandler(DeletedNotFoundException.class)
     public ErrorMessage deletedContactNotFound(DeletedNotFoundException ex) {
         ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), HttpStatus.NO_CONTENT.value());

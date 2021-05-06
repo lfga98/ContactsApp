@@ -2,10 +2,7 @@ package com.lfgaacademy.contactsapp.services;
 
 
 import com.lfgaacademy.contactsapp.entities.Contact;
-import com.lfgaacademy.contactsapp.exceptions.DeletedNotFoundException;
-import com.lfgaacademy.contactsapp.exceptions.FormatInvalidException;
-import com.lfgaacademy.contactsapp.exceptions.MismatchIdException;
-import com.lfgaacademy.contactsapp.exceptions.UniqueConstraintException;
+import com.lfgaacademy.contactsapp.exceptions.*;
 import com.lfgaacademy.contactsapp.repositories.ContactRepository;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +53,19 @@ public class ContactService {
 
 
     private void fieldsValidator(Contact newContact) {
+
+        if (newContact.getName().length()<=0){
+            throw new MissingValueException("Name can't be empty");
+        }
+
+        if (newContact.getLastName().length()<=0){
+            throw new MissingValueException("Last name can't be empty");
+        }
+
+        if (newContact.getEmail().length()<=0){
+            throw new MissingValueException("Email can't be empty");
+        }
+
         if (contactRepository.findContactByEmail(newContact.getEmail()) != null) {
             throw new UniqueConstraintException("The email: " + newContact.getEmail() + " is already being used.");
         }
