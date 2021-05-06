@@ -82,12 +82,15 @@ public class ContactService {
             throw new FormatInvalidException("The last name: " + newContact.getLastName() + " contains numbers. Name can't contain numbers.");
         }
 
-        if (newContact.getPhoneNumber().length() != 10) {
+        if (newContact.getPhoneNumber().length() != 10&&newContact.getPhoneNumber().length() != 0) {
             throw new FormatInvalidException("The phone number: " + newContact.getPhoneNumber() + " must have 10 digits.");
         }
 
         if (emailValidate(newContact.getEmail())) {
             throw new FormatInvalidException("The email: " + newContact.getEmail() + " is not a valid email.");
+        }
+        if (newContact.getPhoneNumber().length()==10&&!newContact.getPhoneNumber().matches("[0-9]+")){
+            throw new FormatInvalidException("The phone number: " + newContact.getPhoneNumber() + " must contain only digits.");
         }
 
 
