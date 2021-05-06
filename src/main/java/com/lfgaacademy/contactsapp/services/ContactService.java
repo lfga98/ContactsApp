@@ -43,7 +43,7 @@ public class ContactService {
     }
 
     public Contact editContact(Long idContact, Contact newContact) {
-        if (idContact.equals(newContact.getId()))
+        if (!idContact.equals(newContact.getId()))
             throw new MismatchIdException("ContactId: " + idContact + " doesn't match object's ID: " + newContact.getId());
 
         fieldsValidator(newContact);
@@ -67,11 +67,17 @@ public class ContactService {
         }
 
         if (contactRepository.findContactByEmail(newContact.getEmail()) != null) {
-            throw new UniqueConstraintException("The email: " + newContact.getEmail() + " is already being used.");
+            if (newContact.getId()==null)
+                throw new UniqueConstraintException("The email: " + newContact.getEmail() + " is already being used.");
+            else if (contactRepository.findContactByEmail(newContact.getEmail()).getId()!=newContact.getId())
+                throw new UniqueConstraintException("The email: " + newContact.getEmail() + " is already being used.");
         }
 
-        if (contactRepository.findContactByPhoneNumber(newContact.getPhoneNumber()) != null) {
-            throw new UniqueConstraintException("The phone number: " + newContact.getPhoneNumber() + " is already being used.");
+        if (!newContact.getPhoneNumber().isEmpty()&&contactRepository.findContactByPhoneNumber(newContact.getPhoneNumber()) != null) {
+            if (newContact.getId()==null)
+                throw new UniqueConstraintException("The phone number: " + newContact.getPhoneNumber() + " is already being used.");
+            if (contactRepository.findContactByPhoneNumber(newContact.getPhoneNumber()).getId()!=newContact.getId())
+                throw new UniqueConstraintException("The phone number: " + newContact.getPhoneNumber() + " is already being used.");
         }
 
         if (newContact.getName().matches(".*\\d.*")) {
@@ -97,7 +103,7 @@ public class ContactService {
     }
 
     private boolean emailValidate(String email) {
-        Matcher matcher = Pattern.compile("^([\\w-\\.]+){1,64}@([\\w&&[^_]]+){2,255}(.[a-z]{2,3})+$|^$", Pattern.CASE_INSENSITIVE).matcher(email);
+        Matcher matcher = Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", Pattern.CASE_INSENSITIVE).matcher(email);
         return !matcher.find();
     }
 

@@ -65,7 +65,37 @@ function showContacts() {
             $("#miModal #btnUpdateModal").hide()
             $("#miModal #btnSaveModal").show()
             cleanForm();
-        })
+        });
+
+        $(".btn-warning").click(function () {
+            $("#titleModal").text("Edit Contact");
+            $("#miModal").modal("show");
+            $("#miModal #btnSaveModal").hide()
+            $("#miModal #btnUpdateModal").show()
+            cleanForm();
+            row = $(this).closest("tr");
+            id = row.find("td:nth-child(1)");
+            $.get("/contacts/"+id.text(), function (data) {
+                $("#miModal #contactId").val(data.id);
+                $("#miModal #nameInput").val(data.name);
+                $("#miModal #lastNameInput").val(data.lastName);
+                $("#miModal #emailInput").val(data.email);
+                $("#miModal #phoneNumberInput").val(data.phoneNumber);
+                $("#miModal #companyInput").val(data.company);
+
+            }).fail(function() {
+                $("#miModal").modal("hide");
+                let notifications=$("#notifications");
+                notifications.show()
+                notifications.addClass("alert");
+                notifications.addClass("alert-danger");
+                notifications.text("");
+                notifications.text("Internal error");
+            });
+
+        });
+
+
     });
 }
 
@@ -176,6 +206,7 @@ function allnumeric(inputtxt) {
 }
 
 function cleanForm(){
+    $("#miModal #contactId").val(-1);
     $("#miModal #nameInput").val("");
     $("#miModal #lastNameInput").val("");
     $("#miModal #emailInput").val("");
@@ -187,12 +218,12 @@ function cleanForm(){
 
 
 
+
 $(document).ready(function () {
     $('#notifications').hide()
     $('#notifications').removeClass("alert alert-warning alert")
     $('#notifications').text("");
     showContacts();
-
 
     $("#miModal #btnSaveModal").click(function () {
         id = $("#miModal #contactId").val();
@@ -231,5 +262,55 @@ $(document).ready(function () {
             });
         }
     });
+
+
+    $("#miModal #btnUpdateModal").click(function () {
+        id = $("#miModal #contactId").val();
+        if (id != -1 && validateFields()) {
+            let contact = {
+                id:$("#miModal #contactId").val(),
+                name: $("#miModal #nameInput").val(),
+                lastName: $("#miModal #lastNameInput").val(),
+                email: $("#miModal #emailInput").val(),
+                phoneNumber: $("#miModal #phoneNumberInput").val(),
+                company: $("#miModal #companyInput").val()
+            }
+            let contactJson = JSON.stringify(contact);
+            $.ajax({
+                url: '/contacts/'+id,
+                dataType: 'json',
+                type: 'put',
+                contentType: 'application/json',
+                data: contactJson,
+                success: function (data, textStatus, jQxhr) {
+                    $("#miModal").modal("hide");
+                    let notificationsBar = $("#notifications")
+                    notificationsBar.show()
+                    notificationsBar.addClass("alert");
+                    notificationsBar.addClass("alert-success");
+                    notificationsBar.text("");
+                    notificationsBar.text("Contact Edited!");
+                    showContacts();
+                    cleanForm();
+                },
+                error: function (jqXhr, textStatus, errorThrown) {
+                    $("#miModal #notificationsModal").addClass("alert");
+                    $("#miModal #notificationsModal").addClass("alert-danger");
+                    $("#miModal #notificationsModal").text("");
+                    $("#miModal #notificationsModal").text(jqXhr.responseJSON.message);
+                }
+            });
+        }
+    });
+
+
+
+
+
+
+
+
+
+
 
 });
