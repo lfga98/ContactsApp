@@ -82,11 +82,11 @@ public class ContactService {
                 throw new UniqueConstraintException("The phone number: " + newContact.getPhoneNumber() + " is already being used.");
         }
 
-        if (containsNonCharacters(newContact.getName())) {
+        if (!containsNonCharacters(newContact.getName())) {
             throw new FormatInvalidException("The name: " + newContact.getName() + " must be only characters.");
         }
 
-        if (containsNonCharacters(newContact.getLastName())) {
+        if (!containsNonCharacters(newContact.getLastName())) {
             throw new FormatInvalidException("The last name: " + newContact.getLastName() + " must be only characters.");
         }
 
