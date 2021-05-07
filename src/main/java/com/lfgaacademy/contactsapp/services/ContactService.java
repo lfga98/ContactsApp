@@ -109,7 +109,7 @@ public class ContactService {
     private boolean containsNonCharacters(String value){
         Pattern special = Pattern.compile ("[!@#$%&*()_+=|<>?{}\\[\\]\"\'~-]");
         Matcher hasSpecial = special.matcher(value);
-        return hasSpecial.find()||value.matches(".*\\d.*");
+        return hasSpecial.find()||value.matches(".*\\d.*")||value.contains(";")||value.contains(".");
     }
 
 

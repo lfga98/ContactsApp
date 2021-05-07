@@ -1,7 +1,7 @@
 function showContacts() {
     $.get("/contacts", function (data) {
         let contactInfo = "";
-        contactInfo = "<table class='table table-striped paginated table-responsive' id='contactsTable'><thead class='table-header'>" +
+        contactInfo = "<table class='table table-striped paginated table-responsive-lg' id='contactsTable'><thead class='table-header'>" +
             "<tr>" +
             "<td>ID</td>" +
             "<td>Name</td>" +
