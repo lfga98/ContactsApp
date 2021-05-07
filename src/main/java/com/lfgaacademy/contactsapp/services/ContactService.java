@@ -82,22 +82,19 @@ public class ContactService {
                 throw new UniqueConstraintException("The phone number: " + newContact.getPhoneNumber() + " is already being used.");
         }
 
-        if (newContact.getName().matches(".*\\d.*")) {
-            throw new FormatInvalidException("The name: " + newContact.getName() + " contains numbers. Name can't contain numbers.");
+        if (containsNonCharacters(newContact.getName())) {
+            throw new FormatInvalidException("The name: " + newContact.getName() + " must be only characters.");
         }
 
-        if (newContact.getLastName().matches(".*\\d.*")) {
-            throw new FormatInvalidException("The last name: " + newContact.getLastName() + " contains numbers. Name can't contain numbers.");
+        if (containsNonCharacters(newContact.getLastName())) {
+            throw new FormatInvalidException("The last name: " + newContact.getLastName() + " must be only characters.");
         }
 
-        if (newContact.getPhoneNumber().length() != 10&&newContact.getPhoneNumber().length() != 0) {
-            throw new FormatInvalidException("The phone number: " + newContact.getPhoneNumber() + " must have 10 digits.");
-        }
 
         if (emailValidate(newContact.getEmail())) {
             throw new FormatInvalidException("The email: " + newContact.getEmail() + " is not a valid email.");
         }
-        if (newContact.getPhoneNumber().length()==10&&!newContact.getPhoneNumber().matches("[0-9]+")){
+        if (newContact.getPhoneNumber().length()!=0&&!newContact.getPhoneNumber().matches("[0-9]+")){
             throw new FormatInvalidException("The phone number: " + newContact.getPhoneNumber() + " must contain only digits.");
         }
 
@@ -107,6 +104,12 @@ public class ContactService {
     private boolean emailValidate(String email) {
         Matcher matcher = Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", Pattern.CASE_INSENSITIVE).matcher(email);
         return !matcher.find();
+    }
+
+    private boolean containsNonCharacters(String value){
+        Pattern special = Pattern.compile ("[!@#$%&*()_+=|<>?{}\\[\\]\"\'~-]");
+        Matcher hasSpecial = special.matcher(value);
+        return hasSpecial.find()||value.matches(".*\\d.*");
     }
 
 

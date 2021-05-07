@@ -1,7 +1,7 @@
 function showContacts() {
     $.get("/contacts", function (data) {
         let contactInfo = "";
-        contactInfo = "<table class='table table-striped paginated' id='contactsTable'><thead class='table-header'>" +
+        contactInfo = "<table class='table table-striped paginated table-responsive' id='contactsTable'><thead class='table-header'>" +
             "<tr>" +
             "<td>ID</td>" +
             "<td>Name</td>" +
@@ -152,12 +152,7 @@ function validateFields(){
         message+="-Last name can't contain digits </br>";
     }
 
-    if (phoneNumber.length!=10&&phoneNumber.length!=0){
-        errors=true;
-        message+="-Phone number must contain only 10 characters or be empty </br>";
-    }
-
-    if (phoneNumber.length==10&&!allnumeric(phoneNumber)){
+    if (phoneNumber.length!=0&&!allnumeric(phoneNumber)){
         errors=true;
         message+="-Phone number must contain only digits </br>";
     }
