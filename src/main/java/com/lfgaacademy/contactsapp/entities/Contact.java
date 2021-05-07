@@ -18,7 +18,7 @@ public class Contact {
     private String lastName;
 
 
-    @Column(name = "phone_number",length = 10)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
 
