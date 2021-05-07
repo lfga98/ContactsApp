@@ -24,6 +24,8 @@ public class ContactService {
     }
 
     public Contact findContactById(Long idContact) {
+        if (contactRepository.findContactById(idContact)==null)
+            throw new ContactNotFoundException("Contact with id: " + idContact + " doesn't exist.");
         return contactRepository.findContactById(idContact);
     }
 

@@ -47,4 +47,13 @@ public class ControllerExceptionHandler {
         return errorMessage;
     }
 
+    @ExceptionHandler(ContactNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorMessage contactNotFound(ContactNotFoundException ex) {
+        ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), HttpStatus.NOT_FOUND.value());
+        return errorMessage;
+    }
+
+
+
 }
